@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="js/jquery.js"></script>
+<script src="js/shape.js"></script>
+<script src="js/canvas.js"></script>
+<link rel="stylesheet" href="font/iconfont.css">
+<style>
+    body,ul,li{
+        margin:0px;
+        padding:0;
+        list-style: none;
+    }
+    .box{
+        width:800px;
+        height:500px;
+        position:fixed;
+        top:0px;
+        left:0px;
+        right:0px;
+        bottom:0px;
+        margin:auto;
+        border:2px solid pink;
+        border-radius: 10px;
+    }
+    .box  .menu{
+        width:100%;
+        height:50px;
+        background:darkgray;
+        text-align: center;
+        line-height: 50px;
+        border-radius: 10px 10px 0 0 ;
+
+    }
+    .menu  .menu-list{
+        padding:0 20px;
+        float:left;
+        color:#1a1d10;
+        font-weight:bold;
+        transition:color 2s ease;
+        cursor: pointer;
+    }
+    .menu  .menu-list:hover{
+        color:lightblue;
+    }
+    .main{
+        width:100%;
+        height:450px;
+    }
+    .main .aside{
+        width:25%;
+        height:100%;
+        border-right:2px solid peachpuff;
+        box-sizing:border-box;
+        font-size: 20px;
+        line-height: 40px;
+        float:left;
+        cursor: pointer;
+    }
+    .main .aside .aside-list:not(:first-child){
+        display:none;
+    }
+    .main .canvas-box{
+        width:75%;
+        height:100%;
+        float:left;
+        position:relative;
+    }
+    .main .canvas-box canvas{
+        background:#eee;
+    }
+    .main .canvas-box .copy{
+        width:100%;
+        height:100%;
+        position:absolute;
+        top:0px;
+        left:0px;
+        z-index: 999;
+    }
+    .aside-list li:hover{
+        color:lightskyblue;
+    }
+    .aside-list{
+        text-align: center;
+    }
+    .aside-list li span{
+       float:left;
+       margin-left:50px;
+        margin-right: 15px;
+    }
+    .canvas-box .eraser{
+        box-sizing: border-box;
+        width:10px;
+        height:10px;
+        border:1px solid black;
+        position:absolute;
+        text-align: center;
+        left:0px;
+        top:0px;
+        display:none;
+    }
+    .copy{
+        border-radius: 0 0 10px 10px ;
+    }
+
+</style>
+<body>
+    <div class="box">
+        <ul class="menu" style="display: flex;justify-content: space-around">
+            <li class="menu-list">文件</li>
+            <li class="menu-list">画图</li>
+            <li class="menu-list">画图方式</li>
+            <li class="menu-list">颜色</li>
+            <li class="menu-list">线宽</li>
+            <li class="menu-list">擦除</li>
+            <li class="menu-list">图片</li>
+        </ul>
+        <div class="main">
+            <div class="aside">
+
+
+                <ul class="aside-list">
+                    <li data-role="1">
+                       <!--<span class="iconfont icon-xinjian"></span>-->
+                        新建</li>
+                    <li data-role="2">
+                        <!--<span class="iconfont icon-iconfont30"></span>-->
+                        返回</li>
+                    <li data-role="3">
+                        <!--<span class="iconfont icon-baocun"></span>-->
+                        保存</li>
+                </ul>
+
+
+                    <ul class="aside-list">
+                        <li data-role="line" >
+                            <!--<span class="iconfont icon-iconfontxian"></span>-->
+                            绘线</li>
+                        <li data-role="rect">
+                            <!--<span class="iconfont icon-agongjutianjiajuxing"></span>-->
+                            矩形</li>
+                        <li data-role="arc">
+                            <!--<span class="iconfont icon-yuanicon"></span>-->
+                            圆</li>
+                        <li data-role="duobian">
+                            <!--<span class="iconfont icon-duobianxing"></span>-->
+                            多边形</li>
+                        <li data-role="duojiao">
+                            <!--<span class="iconfont icon-wujiaoxing"></span>-->
+                            多角形</li>
+                        <li data-role="pen">
+                            <!--<span class="iconfont icon-pen"></span>-->
+                            铅笔工具</li>
+                    </ul>
+
+
+                <ul  class="aside-list">
+                    <li data-role="stroke">
+                        <!--<span class="iconfont icon-biankuangyanse"></span>-->
+                        描边</li>
+                    <li data-role="fill">
+                        <!--<span class="iconfont icon-yanse"></span>-->
+                        填充</li>
+                </ul>
+
+
+                <ul   class="aside-list">
+                    线条颜色:
+                    <br>
+                    <input type="color" data-role="strokeStyle">
+                    <br>
+                    <br>
+                    背景颜色:
+                    <br>
+                    <input type="color" data-role="fillStyle">
+                </ul>
+
+
+
+
+                    <ul class="aside-list">
+                        <li  data-role="1">细</li>
+                        <li  data-role="3">中</li>
+                        <li  data-role="5">粗</li>
+                        <li data-role="null">
+                    自定义粗细：        <input type="number"></li>
+                    </ul>
+
+
+                <ul class="aside-list">
+                    <li  data-role="eraser">
+                        <!--<span class="iconfont icon-cachu1" ></span>-->
+                        擦除
+                        <br>
+                        <div style="width:100%;height:70px;;padding-top:-90px;">
+                            擦除块的大小:<input type="number" data-role="eraser">
+                        </div>
+                    </li>
+
+                </ul>
+
+
+
+                <ul class="aside-list">
+                    <input type="file">
+                    <li  data-role="fanxiang">
+                        <!--<span class="iconfont icon-iconshujufanxiang" ></span>-->
+                        反相</li>
+                    <li  data-role="gaosimoh">
+                        <!--<span class="iconfont icon-gaosimohulvjing" ></span>-->
+                        高斯模糊</li>
+                    <li  data-role="masaike">
+                        <!--<span class="iconfont icon-masaike-copy" ></span>-->
+                        马赛克</li>
+                </ul>
+
+
+
+                </div>
+        <div class="canvas-box">
+            <div class="copy"></div>
+            <canvas></canvas>
+            <img src="" alt="" hidden>
+            <div class="eraser"></div>
+        </div>
+
+        </div>
+    </div>
+</body>
+</html>
